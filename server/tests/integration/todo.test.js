@@ -16,6 +16,7 @@ describe('/todos', () => {
   });
 
   describe('GET /', () => {
+
     it('should return an empty array', () => {
       return request(app)
         .get(rootPath)
@@ -33,6 +34,12 @@ describe('/todos', () => {
         });
       });
     });
+
+    /* My new error test */
+    it('should throw a 404 error', () => {
+      return request(app).get(rootPath + "bad_route").expect(404);
+      });
+
   });
 
   describe('POST /', () => {
@@ -46,6 +53,17 @@ describe('/todos', () => {
         .then((response) => {
           return expect(response.body.subject).toEqual('test');
         });
+    });
+
+    /* My route test */
+    it('should return 1 item in the array', () => {
+      return ToDo.create({
+        subject: 'test',
+      }).then((todo) => {
+        return request(app).delete(rootPath+"/"+todo.id).expect((response) => {
+          return expect(response.body.delete).toEqual(true);
+        });
+      });
     });
   });
 });
